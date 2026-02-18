@@ -1,0 +1,290 @@
+You are a senior enterprise full-stack architect. Design and implement a production-grade CSI Student Chapter Management Platform with scalability, security, and clean architecture.
+
+========================
+PROJECT OVERVIEW
+================
+
+Build a dynamic web platform to manage CSI Student Chapter operations for a college department. The system must replace static websites with a secure, role-based, and scalable solution.
+
+========================
+TECH STACK
+==========
+
+Frontend:
+
+* React (Vite) with TypeScript
+* TailwindCSS
+* React Router
+* React Query (data fetching & caching)
+* Axios
+
+Backend:
+
+* Node.js + Express with TypeScript
+* MongoDB + Mongoose
+* JWT Authentication (HTTP-only cookies)
+* Zod/Joi validation
+
+Security & DevOps:
+
+* Helmet middleware
+* Rate limiting
+* bcrypt password hashing
+* ESLint + Prettier
+* Docker-ready setup
+* Environment variables (.env)
+
+========================
+ARCHITECTURE REQUIREMENTS
+=========================
+
+* Clean Architecture (Controller → Service → Repository → Model)
+* RESTful API design
+* Modular folder structure
+* Centralized error handling
+* Role-based access control
+* Environment-based configuration
+
+========================
+USER ROLES
+==========
+
+* Super Admin
+* Admin (Faculty)
+* Core Team
+* Member
+* Public User
+
+========================
+CORE MODULES
+============
+
+1. Public Website (No Login Required)
+   Pages:
+
+* Home
+* About Us
+* Managing Team
+* Why Us
+* Gallery
+* Membership Details
+* Contact
+
+Requirements:
+
+* SEO-friendly structure
+* Dynamic content via APIs
+* Responsive design
+* Lazy-loaded images
+
+---
+
+2. Authentication & Security
+
+* Student registration & login
+* Admin login
+* JWT in HTTP-only cookies
+* Refresh token mechanism
+* Password hashing with bcrypt
+* Rate limiting on login
+* Secure headers with Helmet
+* Input validation & sanitization
+
+---
+
+3. Membership Management
+
+* Membership application form
+* Admin approval/rejection workflow
+* Membership status tracking
+* Role assignment
+* Export members to CSV
+
+---
+
+4. Event Management
+
+* Create, edit, delete events
+* Event capacity limits
+* Waitlist support
+* Student registration
+* Duplicate registration prevention
+* Attendance tracking
+
+---
+
+5. Gallery Management
+
+* Upload images
+* Categorize by event
+* Lazy loading & optimization
+* Cloud storage ready design
+
+---
+
+6. Contact Management
+
+* Contact form with validation
+* Store messages in database
+* Admin dashboard viewer
+* Spam protection via rate limiting
+
+---
+
+7. Admin Dashboard
+   Include:
+
+* KPI cards (members, events, registrations, pending approvals)
+* Charts (participation trends, membership growth)
+* Member management
+* Event management
+* Gallery management
+* Contact message viewer
+
+========================
+DATABASE SCHEMA
+===============
+
+Users:
+
+* name
+* rollNumber
+* email (unique)
+* passwordHash
+* role
+* membershipStatus
+* createdAt
+* updatedAt
+
+Events:
+
+* title
+* description
+* date
+* venue
+* capacity
+* createdBy
+* status
+* createdAt
+
+Registrations:
+
+* userId
+* eventId
+* attendance
+* status
+* registeredAt
+
+Gallery:
+
+* imageUrl
+* eventId
+* uploadedBy
+* createdAt
+
+Contacts:
+
+* name
+* email
+* message
+* createdAt
+
+========================
+API STANDARDS
+=============
+
+* RESTful naming conventions
+* Proper HTTP status codes
+* Centralized error handling
+* Standard response format:
+
+{
+"success": true,
+"data": {},
+"message": "Optional message"
+}
+
+========================
+SECURITY REQUIREMENTS
+=====================
+
+* Input validation & sanitization
+* XSS protection
+* NoSQL injection protection
+* Secure cookie settings
+* Role-based route guards
+
+========================
+PERFORMANCE & SCALABILITY
+=========================
+
+* Pagination for lists
+* Database indexing (email, eventId)
+* Lazy loading components
+* Image compression
+* API caching via React Query
+
+========================
+FOLDER STRUCTURE
+================
+
+Backend:
+backend/
+├── src/
+│   ├── controllers/
+│   ├── services/
+│   ├── repositories/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── utils/
+│   ├── config/
+│   └── app.ts
+└── server.ts
+
+Frontend:
+frontend/
+├── src/
+│   ├── api/
+│   ├── components/
+│   ├── features/
+│   ├── hooks/
+│   ├── layouts/
+│   ├── pages/
+│   ├── routes/
+│   ├── context/
+│   └── App.tsx
+
+========================
+DEVOPS READINESS
+================
+
+* Dockerfile for backend
+* .env.example file
+* Production build scripts
+* README with setup steps
+* Seed script for admin user
+
+========================
+BONUS FEATURES (IF TIME PERMITS)
+================================
+
+* Email notifications for event registration
+* PDF certificate generation
+* Audit logs for admin actions
+* Role-based UI rendering
+* Dark mode with saved preference
+
+========================
+FINAL OUTPUT REQUIREMENTS
+=========================
+
+* Fully functional frontend & backend
+* Secure authentication system
+* Admin dashboard
+* Dynamic public website
+* No hardcoded data
+* Clear setup documentation
+* Production-ready structure
+
+End of instructions. Generate the full working project step by step.
