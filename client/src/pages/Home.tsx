@@ -16,9 +16,7 @@ export default function Home() {
     .slice(0, 3) || [];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
+    <div className="min-h-screen flex flex-col pt-16">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-900 text-white py-24 lg:py-32">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
