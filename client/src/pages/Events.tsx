@@ -1,5 +1,3 @@
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { useEvents } from "@/hooks/use-events";
 import { EventCard } from "@/components/shared/EventCard";
 import { Input } from "@/components/ui/input";
@@ -12,7 +10,7 @@ export default function Events() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const filteredEvents = events?.filter(event => {
+  const filteredEvents = events?.filter((event: any) => {
     const matchesSearch = event.title.toLowerCase().includes(search.toLowerCase()) || 
                           event.description.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "all" || event.status === filter;
@@ -68,14 +66,13 @@ export default function Events() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents?.map(event => (
+            {filteredEvents?.map((event: any) => (
               <EventCard key={event.id} event={event} />
             ))}
           </div>
         )}
       </div>
 
-      <Footer />
     </div>
   );
 }

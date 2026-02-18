@@ -1,8 +1,6 @@
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Code, Users, Award, Calendar } from "lucide-react";
+import { ArrowRight, Code, Users, Award, Calendar, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEvents } from "@/hooks/use-events";
 import { EventCard } from "@/components/shared/EventCard";
@@ -12,7 +10,7 @@ export default function Home() {
 
   // Get up to 3 upcoming events
   const upcomingEvents = events
-    ?.filter(e => e.status === 'upcoming')
+    ?.filter((e: any) => e.status === 'upcoming')
     .slice(0, 3) || [];
 
   return (
@@ -51,9 +49,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats / Features */}
+      {/* Why Us Section - Added to Landing Page */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-slate-900 mb-4">Why Join CSI?</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Get access to world-class resources, mentorship, and a community that helps you grow.</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div 
               whileHover={{ y: -5 }}
@@ -91,6 +93,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Membership Section Preview - Added to Landing Page */}
+      <section className="py-20 bg-slate-900 text-white">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="lg:w-1/2">
+              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6">Ready to lead the future?</h2>
+              <p className="text-slate-300 text-lg mb-8">
+                CSI membership gives you the edge you need in the competitive tech world. 
+                From certifications to leadership roles, we provide it all.
+              </p>
+              <ul className="space-y-4 mb-10">
+                {["Industry recognized certifications", "Access to CSI National Knowledge Portal", "Participation in National Events", "Monthly Technical Magazine"].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/membership">
+                <Button variant="secondary" size="lg" className="rounded-full">
+                  Learn More About Membership
+                </Button>
+              </Link>
+            </div>
+            <div className="lg:w-1/2">
+              <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80" alt="Students working" className="object-cover w-full h-full" />
+                <div className="absolute inset-0 bg-primary/20"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Upcoming Events Preview */}
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
@@ -114,7 +150,7 @@ export default function Home() {
             </div>
           ) : upcomingEvents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {upcomingEvents.map(event => (
+              {upcomingEvents.map((event: any) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
@@ -142,6 +178,24 @@ export default function Home() {
             Join 500+ student members who are already building their future with CSI. 
             Access exclusive resources, mentorship, and events.
           </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <Link href="/about" className="p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors">
+              <h3 className="font-bold mb-2">About CSI</h3>
+              <p className="text-sm text-blue-100">Learn about our mission and history.</p>
+            </Link>
+            <Link href="/team" className="p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors">
+              <h3 className="font-bold mb-2">Our Team</h3>
+              <p className="text-sm text-blue-100">Meet the people behind the chapter.</p>
+            </Link>
+            <Link href="/why-us" className="p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors">
+              <h3 className="font-bold mb-2">Why Us?</h3>
+              <p className="text-sm text-blue-100">Discover the benefits of joining.</p>
+            </Link>
+            <Link href="/gallery" className="p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors">
+              <h3 className="font-bold mb-2">Gallery</h3>
+              <p className="text-sm text-blue-100">Explore our past events in photos.</p>
+            </Link>
+          </div>
           <Link href="/register">
             <Button size="lg" variant="secondary" className="text-primary font-bold px-10 py-6 rounded-full text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
               Join CSI Today
@@ -149,8 +203,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }
