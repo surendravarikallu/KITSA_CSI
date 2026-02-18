@@ -21,9 +21,11 @@ export function Navbar() {
   const links = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
+    { href: "/team", label: "Team" },
+    { href: "/why-us", label: "Why Us" },
     { href: "/events", label: "Events" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/contact", label: "Contact" },
+    { href: "/membership", label: "Membership" },
   ];
 
   const isActive = (path: string) => location === path;

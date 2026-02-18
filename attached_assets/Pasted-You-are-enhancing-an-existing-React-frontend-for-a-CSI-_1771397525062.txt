@@ -1,0 +1,109 @@
+You are enhancing an existing React frontend for a CSI Student Chapter Management System.
+
+The current frontend is missing several required public sections. Extend the application by adding the following pages, routes, and reusable components while maintaining the existing project structure and styling.
+
+========================
+MISSING PUBLIC PAGES TO IMPLEMENT
+=================================
+
+Create the following pages:
+
+1. About Us
+   Content:
+
+   * Overview of CSI (Computer Society of India)
+   * Chapter mission and vision
+   * Faculty coordinator message
+   * Timeline or milestones section
+
+2. Managing Team
+   Content:
+
+   * Faculty coordinator
+   * President, Vice President
+   * Core team members
+   * Each member displayed as a card with:
+     name, role, photo, optional LinkedIn link
+
+3. Why Us
+   Content:
+
+   * Benefits of joining CSI:
+     • Workshops & certifications
+     • Hackathons & competitions
+     • Industry exposure
+     • Networking opportunities
+     • Leadership experience
+   * Display as icon-based feature cards
+
+4. Gallery
+   Content:
+
+   * Grid layout of event images
+   * Category filter (Workshops, Hackathons, Seminars)
+   * Lightbox modal for image preview
+   * Images fetched from backend API
+
+5. Membership Pricing (or Membership Details)
+   Content:
+
+   * Membership fee
+   * Validity period
+   * Benefits list
+   * “Apply for Membership” button
+   * If pricing tiers are not used, display a single membership plan card
+
+========================
+ROUTING REQUIREMENTS
+====================
+
+Add routes using React Router:
+
+/about
+/team
+/why-us
+/gallery
+/membership
+
+Update the Navbar to include links to all pages.
+
+========================
+COMPONENT REQUIREMENTS
+======================
+
+Create reusable components:
+
+* SectionHeader
+* TeamCard
+* FeatureCard
+* GalleryGrid
+* MembershipCard
+
+Ensure components are responsive and styled with TailwindCSS.
+
+========================
+DATA HANDLING
+=============
+
+* Fetch gallery images and team data from backend APIs if available.
+* If APIs are not ready, create placeholder mock data with clear TODO comments.
+
+========================
+UI REQUIREMENTS
+===============
+
+* Fully responsive design
+* Consistent academic theme (blue/white)
+* Smooth hover effects
+* Accessible semantic HTML
+
+========================
+FINAL EXPECTATIONS
+==================
+
+* All missing pages implemented
+* Navbar updated with working navigation
+* Clean, reusable components
+* No breaking changes to existing pages
+
+End of instructions. Extend the frontend accordingly.
