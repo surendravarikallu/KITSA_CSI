@@ -2,9 +2,28 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Trust proxy for Replit
+app.set("trust proxy", 1);
+
+// Security Middleware
+app.use(helmet({
+  contentSecurityPolicy: false, // Disabled for development compatibility
+}));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
+
+// Apply rate limiting to all requests
+app.use(limiter);
 
 declare module "http" {
   interface IncomingMessage {
