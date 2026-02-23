@@ -13,11 +13,11 @@ import { ArrowLeft } from "lucide-react";
 export default function Register() {
   const { register, isRegistering, user } = useAuth();
   const [, setLocation] = useLocation();
-  
+
   const form = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
     defaultValues: {
-      role: 'user',
+      role: 'student',
       membershipStatus: 'pending'
     }
   });
@@ -60,7 +60,7 @@ export default function Register() {
                   <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2 col-span-2 md:col-span-1">
                 <Label htmlFor="rollNumber">Roll Number (Optional)</Label>
                 <Input id="rollNumber" {...form.register("rollNumber")} placeholder="123456" />
@@ -77,7 +77,7 @@ export default function Register() {
                 <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" {...form.register("password")} />

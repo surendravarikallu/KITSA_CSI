@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, type LoginRequest, type InsertUser } from "@shared/routes";
+import { api } from "@shared/routes";
+import { type LoginRequest, type InsertUser } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 export function useAuth() {
@@ -26,8 +27,14 @@ export function useAuth() {
       });
 
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Login failed");
+        let errorMsg = "Login failed";
+        try {
+          const error = await res.json();
+          errorMsg = error.message || errorMsg;
+        } catch (e) {
+          errorMsg = await res.text() || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
       return await res.json();
     },
@@ -56,8 +63,14 @@ export function useAuth() {
       });
 
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Registration failed");
+        let errorMsg = "Registration failed";
+        try {
+          const error = await res.json();
+          errorMsg = error.message || errorMsg;
+        } catch (e) {
+          errorMsg = await res.text() || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
       return await res.json();
     },

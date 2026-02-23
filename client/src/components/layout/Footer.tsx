@@ -1,68 +1,83 @@
-import { Link } from "wouter";
-import { Facebook, Twitter, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { useLocation } from "wouter";
 
 export function Footer() {
+  const [location] = useLocation();
+
+  // Do not render the public Footer on protected dashboard or profile pages
+  if (
+    location.startsWith("/admin/") ||
+    location.startsWith("/organizer/") ||
+    location.startsWith("/student/") ||
+    location.startsWith("/profile")
+  ) {
+    return null;
+  }
+
   return (
-    <footer className="bg-slate-900 text-slate-200 border-t border-slate-800">
+    <footer className="bg-slate-900 text-slate-200 border-t border-slate-800 pb-8">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Useful Links */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-xl text-white">CSI Chapter</h3>
-            <p className="text-sm text-slate-400">
-              Empowering students with technical knowledge and professional skills since 2010.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="hover:text-primary transition-colors"><Facebook className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-primary transition-colors"><Twitter className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-primary transition-colors"><Instagram className="h-5 w-5" /></a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/team" className="hover:text-white transition-colors">Managing Team</Link></li>
-              <li><Link href="/why-us" className="hover:text-white transition-colors">Why Us</Link></li>
-              <li><Link href="/events" className="hover:text-white transition-colors">Events</Link></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white">Resources</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
-              <li><Link href="/membership" className="hover:text-white transition-colors">Membership</Link></li>
-              <li><Link href="/login" className="hover:text-white transition-colors">Member Login</Link></li>
+            <h4 className="font-display font-bold text-xl text-white border-b border-slate-700 pb-2 inline-block">Useful Links</h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/#home" className="hover:text-blue-400 transition-colors flex items-center gap-2"><span className="text-blue-500">›</span> Home</a></li>
+              <li><a href="/#about" className="hover:text-blue-400 transition-colors flex items-center gap-2"><span className="text-blue-500">›</span> About us</a></li>
+              <li><a href="/#gallery" className="hover:text-blue-400 transition-colors flex items-center gap-2"><span className="text-blue-500">›</span> Gallery</a></li>
+              <li><a href="/#team" className="hover:text-blue-400 transition-colors flex items-center gap-2"><span className="text-blue-500">›</span> Team</a></li>
+              <li><a href="/#membership" className="hover:text-blue-400 transition-colors flex items-center gap-2"><span className="text-blue-500">›</span> Pricing</a></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-white">Contact Us</h4>
-            <ul className="space-y-3 text-sm text-slate-400">
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-2 shrink-0 text-primary" />
-                <span>123 University Campus,<br />Tech Building, Room 404</span>
+            <h4 className="font-display font-bold text-xl text-white border-b border-slate-700 pb-2 inline-block">Contact Us</h4>
+            <ul className="space-y-4 text-sm text-slate-300">
+              <li className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 shrink-0 text-blue-400 mt-0.5" />
+                <span className="leading-relaxed">NH 16, Yanamadala (V & P),<br />Opp. Katuri Medical College,<br />Guntur Dist, AP 522019</span>
               </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-2 text-primary" />
-                <span>contact@csichapter.edu</span>
+              <li className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-blue-400" />
+                <span>0863-2288886, 0863-2288887</span>
               </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-2 text-primary" />
-                <span>+91 98765 43210</span>
+              <li className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-blue-400" />
+                <a href="mailto:principal@kitsakshar.ac.in" className="hover:text-white transition-colors">principal@kitsakshar.ac.in</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="font-bold text-blue-400">🌐</span>
+                <a href="https://www.kitsakshar.ac.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">www.kitsakshar.ac.in</a>
+              </li>
+              <li className="flex items-center gap-3 pt-2">
+                <a href="https://www.instagram.com/kits_csi_official/" target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg transition-colors border border-slate-700 hover:border-blue-500 text-blue-400 hover:text-white">
+                  <Instagram className="h-4 w-4" />
+                  <span className="font-medium text-xs tracking-wider uppercase">Follow Instagram</span>
+                </a>
               </li>
             </ul>
           </div>
+
+          {/* About */}
+          <div className="space-y-4">
+            <h3 className="font-display font-bold text-xl text-white border-b border-slate-700 pb-2 inline-block">About KITSakshar CSI</h3>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Established on 28th Sep, 2016. Benefiting the students in all round development.
+            </p>
+            <div className="pt-4">
+              <img
+                src="/college.webp"
+                alt="KITS Logo"
+                className="h-20 w-auto bg-white rounded-md p-1.5 inline-block opacity-90 hover:opacity-100 transition-opacity"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Computer Society of India Student Chapter. All rights reserved.</p>
+        <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+          <p>© {new Date().getFullYear()} <strong className="text-slate-400">KITS Akshar Institute of Technology CSI Student Chapter</strong>. All rights reserved.</p>
+          <p>Designed for KITS Akshar Institute of Technology</p>
         </div>
       </div>
     </footer>

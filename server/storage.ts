@@ -1,17 +1,19 @@
 import { db, pool } from "./db";
-import { users, events, registrations, gallery, contacts } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { users, events, registrations, gallery, contacts, committeeMembers } from "@shared/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import session from "express-session";
-import connectPg from "connect-pg-simple";
-import type { 
-  User, InsertUser, 
-  Event, InsertEvent, 
+import createMemoryStore from "memorystore";
+
+const MemoryStore = createMemoryStore(session);
+import type {
+  User, InsertUser,
+  Event, InsertEvent,
   Registration, InsertRegistration,
   GalleryItem, InsertGalleryItem,
-  ContactMessage, InsertContactMessage
+  ContactMessage, InsertContactMessage,
+  CommitteeMember, InsertCommitteeMember
 } from "@shared/schema";
 
-const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   sessionStore: session.Store;
@@ -20,7 +22,9 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  createUsers(users: InsertUser[]): Promise<User[]>;
   updateUser(id: number, user: Partial<User>): Promise<User>;
+  setUserIdCard(id: number, url: string): Promise<User>;
   getAllUsers(): Promise<User[]>;
   getPendingUsers(): Promise<User[]>;
 
@@ -44,6 +48,12 @@ export interface IStorage {
   createContact(contact: InsertContactMessage): Promise<ContactMessage>;
   getContacts(): Promise<ContactMessage[]>;
 
+  // Committee Members
+  getCommitteeMembers(): Promise<CommitteeMember[]>;
+  createCommitteeMember(member: InsertCommitteeMember): Promise<CommitteeMember>;
+  updateCommitteeMember(id: number, member: Partial<CommitteeMember>): Promise<CommitteeMember>;
+  deleteCommitteeMember(id: number): Promise<void>;
+
   // Admin Stats
   getStats(): Promise<{ totalMembers: number, totalEvents: number, pendingApprovals: number }>;
 }
@@ -52,9 +62,8 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.sessionStore = new PostgresSessionStore({
-      pool,
-      createTableIfMissing: true,
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
     });
   }
 
@@ -74,13 +83,24 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async createUsers(insertUsers: InsertUser[]): Promise<User[]> {
+    if (insertUsers.length === 0) return [];
+    const insertedUsers = await db.insert(users).values(insertUsers).returning();
+    return insertedUsers;
+  }
+
   async updateUser(id: number, updates: Partial<User>): Promise<User> {
     const [user] = await db.update(users).set(updates).where(eq(users.id, id)).returning();
     return user;
   }
 
+  async setUserIdCard(id: number, url: string): Promise<User> {
+    const [user] = await db.update(users).set({ idCardUrl: url }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
   async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users);
+    return await db.select().from(users).orderBy(desc(users.createdAt)).limit(100);
   }
 
   async getPendingUsers(): Promise<User[]> {
@@ -147,15 +167,38 @@ export class DatabaseStorage implements IStorage {
 
   // Admin Stats
   async getStats(): Promise<{ totalMembers: number, totalEvents: number, pendingApprovals: number }> {
-    const usersCount = await db.select().from(users);
-    const eventsCount = await db.select().from(events);
-    const pendingCount = await db.select().from(users).where(eq(users.membershipStatus, "pending"));
+    const [[usersCountRes], [eventsCountRes], [pendingCountRes]] = await Promise.all([
+      db.select({ count: sql<number>`cast(count(${users.id}) as integer)` }).from(users),
+      db.select({ count: sql<number>`cast(count(${events.id}) as integer)` }).from(events),
+      db.select({ count: sql<number>`cast(count(${users.id}) as integer)` })
+        .from(users)
+        .where(eq(users.membershipStatus, "pending"))
+    ]);
 
     return {
-      totalMembers: usersCount.length,
-      totalEvents: eventsCount.length,
-      pendingApprovals: pendingCount.length
+      totalMembers: usersCountRes?.count ?? 0,
+      totalEvents: eventsCountRes?.count ?? 0,
+      pendingApprovals: pendingCountRes?.count ?? 0
     };
+  }
+
+  // Committee Members
+  async getCommitteeMembers(): Promise<CommitteeMember[]> {
+    return await db.select().from(committeeMembers).orderBy(committeeMembers.orderOffset);
+  }
+
+  async createCommitteeMember(member: InsertCommitteeMember): Promise<CommitteeMember> {
+    const [newMember] = await db.insert(committeeMembers).values(member).returning();
+    return newMember;
+  }
+
+  async updateCommitteeMember(id: number, updates: Partial<CommitteeMember>): Promise<CommitteeMember> {
+    const [updated] = await db.update(committeeMembers).set(updates).where(eq(committeeMembers.id, id)).returning();
+    return updated;
+  }
+
+  async deleteCommitteeMember(id: number): Promise<void> {
+    await db.delete(committeeMembers).where(eq(committeeMembers.id, id));
   }
 }
 

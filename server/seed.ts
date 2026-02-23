@@ -11,15 +11,15 @@ async function hashPassword(password: string) {
 }
 
 export async function seedDatabase() {
-  const existingUsers = await storage.getAllUsers();
-  if (existingUsers.length === 0) {
+  const existingUsers = await storage.getStats();
+  if (existingUsers.totalMembers === 0) {
     const hashedPassword = await hashPassword("admin123");
     await storage.createUser({
       name: "Admin User",
       email: "admin@csi.edu",
       password: hashedPassword,
       role: "admin",
-      membershipStatus: "active",
+      membershipStatus: "approved",
       rollNumber: "ADMIN001",
     });
 
@@ -28,11 +28,11 @@ export async function seedDatabase() {
       name: "John Student",
       email: "john@csi.edu",
       password: studentPassword,
-      role: "member",
-      membershipStatus: "active",
+      role: "student",
+      membershipStatus: "approved",
       rollNumber: "S12345",
     });
-    
+
     // Seed events
     await storage.createEvent({
       title: "Tech Symposium 2024",
@@ -44,18 +44,18 @@ export async function seedDatabase() {
     });
 
     await storage.createEvent({
-        title: "Web Development Workshop",
-        description: "Hands-on session on React and Node.js.",
-        date: new Date("2024-10-20T14:00:00"),
-        venue: "Lab 3",
-        capacity: 50,
-        status: "completed"
+      title: "Web Development Workshop",
+      description: "Hands-on session on React and Node.js.",
+      date: new Date("2024-10-20T14:00:00"),
+      venue: "Lab 3",
+      capacity: 50,
+      status: "completed"
     });
-    
+
     // Seed gallery
     await storage.addToGallery({
-        imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80",
-        caption: "Symposium 2023 Audience",
+      imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80",
+      caption: "Symposium 2023 Audience",
     });
 
     console.log("Database seeded successfully");

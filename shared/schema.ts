@@ -11,8 +11,9 @@ export const users = pgTable("users", {
   rollNumber: text("roll_number").unique(), // Optional for non-students
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  role: text("role", { enum: ["super_admin", "admin", "core_team", "member", "user"] }).default("user").notNull(),
-  membershipStatus: text("membership_status", { enum: ["active", "inactive", "pending"] }).default("inactive").notNull(),
+  role: text("role", { enum: ["admin", "organizer", "student"] }).default("student").notNull(),
+  membershipStatus: text("membership_status", { enum: ["pending", "approved", "rejected"] }).default("pending").notNull(),
+  idCardUrl: text("id_card_url"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -52,6 +53,17 @@ export const contacts = pgTable("contacts", {
   name: text("name").notNull(),
   email: text("email").notNull(),
   message: text("message").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const committeeMembers = pgTable("committee_members", {
+  id: serial("id").primaryKey(),
+  designation: text("designation").notNull(),
+  name: text("name").notNull(),
+  rollNo: text("roll_no"),
+  year: text("year"),
+  branch: text("branch"),
+  orderOffset: integer("order_offset").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -101,6 +113,7 @@ export const insertEventSchema = createInsertSchema(events).omit({ id: true, cre
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({ id: true, registeredAt: true, attended: true, status: true });
 export const insertGallerySchema = createInsertSchema(gallery).omit({ id: true, createdAt: true, uploadedBy: true });
 export const insertContactSchema = createInsertSchema(contacts).omit({ id: true, createdAt: true });
+export const insertCommitteeMemberSchema = createInsertSchema(committeeMembers).omit({ id: true, createdAt: true });
 
 // === EXPLICIT API CONTRACT TYPES ===
 
@@ -118,6 +131,9 @@ export type InsertGalleryItem = z.infer<typeof insertGallerySchema>;
 
 export type ContactMessage = typeof contacts.$inferSelect;
 export type InsertContactMessage = z.infer<typeof insertContactSchema>;
+
+export type CommitteeMember = typeof committeeMembers.$inferSelect;
+export type InsertCommitteeMember = z.infer<typeof insertCommitteeMemberSchema>;
 
 // Request/Response types
 export type LoginRequest = { username: string; password: string };

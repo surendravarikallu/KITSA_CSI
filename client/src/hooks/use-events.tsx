@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, buildUrl, type InsertEvent } from "@shared/routes";
+import { api, buildUrl } from "@shared/routes";
+import { type InsertEvent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 export function useEvents() {
@@ -34,6 +35,26 @@ export function useEvents() {
     },
   });
 
+  const updateEventMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: Partial<InsertEvent> }) => {
+      const url = buildUrl(api.events.update.path, { id });
+      const res = await fetch(url, {
+        method: api.events.update.method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update event");
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.events.list.path] });
+      toast({ title: "Event Updated", description: "The event details have been modified." });
+    },
+    onError: () => {
+      toast({ variant: "destructive", title: "Error", description: "Failed to update event." });
+    },
+  });
+
   const deleteEventMutation = useMutation({
     mutationFn: async (id: number) => {
       const url = buildUrl(api.events.delete.path, { id });
@@ -51,8 +72,10 @@ export function useEvents() {
     isLoading,
     error,
     createEvent: createEventMutation.mutate,
+    updateEvent: updateEventMutation.mutate,
     deleteEvent: deleteEventMutation.mutate,
     isCreating: createEventMutation.isPending,
+    isUpdating: updateEventMutation.isPending,
     isDeleting: deleteEventMutation.isPending,
   };
 }
@@ -79,7 +102,7 @@ export function useRegisterEvent() {
     mutationFn: async (eventId: number) => {
       const url = buildUrl(api.events.register.path, { id: eventId });
       const res = await fetch(url, { method: api.events.register.method });
-      
+
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.message || "Registration failed");

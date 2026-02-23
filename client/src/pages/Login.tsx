@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -19,20 +20,21 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function Login() {
   const { login, isLoggingIn, user } = useAuth();
   const [, setLocation] = useLocation();
-  
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
   // Redirect if already logged in
   if (user) {
-    setLocation("/");
+    setLocation(`/${user.role}/dashboard`);
     return null;
   }
 
   const onSubmit = (data: LoginForm) => {
     login(data, {
-      onSuccess: () => setLocation("/"),
+      onSuccess: (userData: any) => setLocation(`/${userData.role}/dashboard`),
     });
   };
 
@@ -57,9 +59,9 @@ export default function Login() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username / Email</Label>
-              <Input 
-                id="username" 
-                placeholder="john@example.com" 
+              <Input
+                id="username"
+                placeholder="john@example.com"
                 {...form.register("username")}
                 className="bg-slate-50"
               />
@@ -67,15 +69,25 @@ export default function Login() {
                 <p className="text-sm text-red-500">{form.formState.errors.username.message}</p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                {...form.register("password")}
-                className="bg-slate-50"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  {...form.register("password")}
+                  className="bg-slate-50 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700 focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {form.formState.errors.password && (
                 <p className="text-sm text-red-500">{form.formState.errors.password.message}</p>
               )}
@@ -86,14 +98,6 @@ export default function Login() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2 text-center text-sm text-slate-500">
-          <div>
-            Don't have an account?{" "}
-            <Link href="/register" className="text-primary hover:underline font-medium">
-              Join CSI
-            </Link>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   );

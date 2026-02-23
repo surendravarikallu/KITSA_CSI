@@ -55,6 +55,14 @@ export const api = {
         401: errorSchemas.unauthorized,
       },
     },
+    myEvents: {
+      method: 'GET' as const,
+      path: '/api/user/events' as const,
+      responses: {
+        200: z.array(z.custom<typeof events.$inferSelect & { registrationStatus?: string }>()),
+        401: errorSchemas.unauthorized,
+      },
+    },
   },
   events: {
     list: {
