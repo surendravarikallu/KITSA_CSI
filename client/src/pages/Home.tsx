@@ -43,7 +43,7 @@ export default function Home() {
               Welcome to <span className="text-blue-400 block mt-2">KITS akshar CSI</span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-200 max-w-3xl mx-auto mb-12 font-light tracking-wide drop-shadow-md">
-              The seed for KITS CSI has been planted for many months, the hardwork finally paid off on 28th Sep, 2016. The KITS CSI came into existance and the students and other members of CSI from our institution are getting benefited since then.
+              The seed for KITS AKSHAR CSI has been planted for many months, the hardwork finally paid off on 22nd November, 2022. The KITS AKSHAR CSI came into existance and the students and other members of CSI from our institution are getting benefited since then.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <a href="#about">

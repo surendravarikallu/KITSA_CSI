@@ -64,6 +64,7 @@ export const committeeMembers = pgTable("committee_members", {
   year: text("year"),
   branch: text("branch"),
   orderOffset: integer("order_offset").default(0),
+  memberRole: text("member_role", { enum: ["committee", "organiser", "coordinator"] }).default("committee").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

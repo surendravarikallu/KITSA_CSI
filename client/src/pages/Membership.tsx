@@ -10,15 +10,15 @@ export default function Membership() {
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <SectionHeader 
-        title="Membership Details" 
-        subtitle="Join our community of over 500+ members and get access to exclusive resources and events."
+      <SectionHeader
+        title="Membership Details"
+        subtitle="Join our community of over 100+ members and get access to exclusive resources and events."
       />
 
       <div className="max-w-xl mx-auto">
         <MembershipCard
           title="Student Membership"
-          price="₹500"
+          price="₹400"
           period="Year"
           features={[
             "Free access to all local workshops",
@@ -30,7 +30,7 @@ export default function Membership() {
           ]}
           onApply={handleApply}
         />
-        
+
         <div className="mt-12 p-8 bg-muted/30 rounded-2xl border border-primary/5">
           <h3 className="text-xl font-bold mb-4">Membership Process</h3>
           <div className="space-y-4 text-muted-foreground">

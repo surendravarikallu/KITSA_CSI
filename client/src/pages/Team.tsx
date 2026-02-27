@@ -5,27 +5,52 @@ import { useCommittee } from "@/hooks/use-committee";
 
 const managingTeam = [
   { name: "Sri. K. Subba Rao", role: "Chairman KITS college", email: "chairman@kitsakshar.ac.in", image: "/chairman.webp" },
-  { name: "Sri. K. Sekhar", role: "Secretary KITS college", email: "secretary@kitsakshar.ac.in", image: "https://kitscsignt.web.app/assets/images/secretary.jpeg" },
-  { name: "Dr. K.Rama Kotaiah", role: "Principal KITS college", email: "principal@kitsakshar.ac.in", image: "https://kitscsignt.web.app/assets/images/principal.jpeg" },
-  { name: "G.Samba Siva Rao", role: "Director KITS college", email: "director@kitsakshar.ac.in", image: "https://kitscsignt.web.app/assets/images/drctr.jpeg" },
-  { name: "Dr. G. Guru Kesava Das", role: "Professor & Head - Academic", email: "csehod@kitsakshar.ac.in", extra: "Professor & Head of the Department CSE", image: "https://kitscsignt.web.app/assets/images/hod.jpg" },
-  { name: "Dr.sk.mahamud rafi", role: "Associate Professor / CSI Coordinator", email: "csicoordinator@kitsakshar.ac.in", extra: "Associate Professor CSE", image: "https://kitscsignt.web.app/assets/images/img2.jpg" },
+  { name: "Sri. K. Sekhar", role: "Secretary KITS college", email: "secretary@kitsakshar.ac.in", image: "/secretary.webp" },
+  { name: "G.Samba Siva Rao", role: "Director KITS college", email: "director@kitsakshar.ac.in", image: "/director.webp" },
+  { name: "Dr. K.Rama Kotaiah", role: "Principal KITS college", email: "principal@kitsakshar.ac.in", image: "/principal.webp" },
+  { name: "Dr. G. Guru Kesava Das", role: "Professor & Head - Academic", email: "csehod@kitsakshar.ac.in", extra: "Professor & Head of the Department CSE", image: "/hod.webp" },
+  { name: "Dr.sk.mahamud rafi", role: "Professor / CSI Coordinator", email: "csicoordinator@kitsakshar.ac.in", extra: "Professor CSE", image: "/rafi.webp" },
 ];
 
-const studentOrganizers = [
-  { name: "Sathwika", rollNo: "20JR1A1289", year: "3rd Year", branch: "IT" },
-  { name: "Aguru Sindhuja", rollNo: "20JR1A0501", year: "3rd Year", branch: "CSE" },
-  { name: "G. VYSHNAVI", rollNo: "20JR144308", year: "3rd Year", branch: "CAI" },
-  { name: "N.Saketh", rollNo: "20JR1A0329", year: "3rd Year", branch: "Mech" },
-  { name: "Narne Pavani", rollNo: "20JR1A4320", year: "3rd Year", branch: "CAI" },
-];
-
-const coordinators = [
-  { name: "V.Hemanth Kumar", rollNo: "21JR1A05I8", year: "2nd Year", branch: "CSE" },
-];
+function StudentTable({ rows, isLoading, emptyLabel }: { rows: any[]; isLoading: boolean; emptyLabel: string }) {
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-12">
+      {isLoading ? (
+        <div className="flex justify-center p-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : rows.length > 0 ? (
+        <Table>
+          <TableHeader className="bg-slate-900">
+            <TableRow className="hover:bg-slate-900 border-b-0">
+              <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">DESIGNATION</TableHead>
+              <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">NAME</TableHead>
+              <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">ROLL NO</TableHead>
+              <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/8">YEAR</TableHead>
+              <TableHead className="font-bold text-lg text-white text-center py-4 w-1/8">BRANCH</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((member) => (
+              <TableRow key={member.id} className="hover:bg-slate-50 border-b border-slate-200">
+                <TableCell className="font-bold text-slate-800 text-center uppercase border-r border-slate-200">{member.designation}</TableCell>
+                <TableCell className="font-bold text-slate-700 text-center uppercase border-r border-slate-200">{member.name}</TableCell>
+                <TableCell className="font-bold text-slate-600 text-center uppercase border-r border-slate-200">{member.rollNo || "-"}</TableCell>
+                <TableCell className="font-bold text-slate-600 text-center uppercase border-r border-slate-200">{member.year || "-"}</TableCell>
+                <TableCell className="font-bold text-slate-600 text-center uppercase">{member.branch || "-"}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="text-center p-8 text-muted-foreground font-medium">{emptyLabel}</div>
+      )}
+    </div>
+  );
+}
 
 export default function Team() {
-  const { members, isLoading } = useCommittee();
+  const { committeeOnly, organisers, coordinators, isLoading } = useCommittee();
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -52,90 +77,16 @@ export default function Team() {
       </div>
 
       <div className="max-w-5xl mx-auto">
+
         <h2 className="font-display font-bold text-3xl mb-6 text-slate-800 border-b pb-2 text-center uppercase tracking-wide">Committee Members</h2>
+        <StudentTable rows={committeeOnly} isLoading={isLoading} emptyLabel="Committee Members are currently being updated." />
 
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-12">
-          {isLoading ? (
-            <div className="flex justify-center p-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
-          ) : members && members.length > 0 ? (
-            <Table>
-              <TableHeader className="bg-slate-900">
-                <TableRow className="hover:bg-slate-900 border-b-0">
-                  <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">DESIGNATION</TableHead>
-                  <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">NAME</TableHead>
-                  <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/4">ROLL NO</TableHead>
-                  <TableHead className="font-bold text-lg text-white text-center py-4 border-r border-slate-700 w-1/8">YEAR</TableHead>
-                  <TableHead className="font-bold text-lg text-white text-center py-4 w-1/8">BRANCH</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {members.map((member, i) => (
-                  <TableRow key={member.id} className="hover:bg-slate-50 border-b border-slate-200">
-                    <TableCell className="font-bold text-slate-800 text-center uppercase border-r border-slate-200">{member.designation}</TableCell>
-                    <TableCell className="font-bold text-slate-700 text-center uppercase border-r border-slate-200">{member.name}</TableCell>
-                    <TableCell className="font-bold text-slate-600 text-center uppercase border-r border-slate-200">{member.rollNo || "-"}</TableCell>
-                    <TableCell className="font-bold text-slate-600 text-center uppercase border-r border-slate-200">{member.year || "-"}</TableCell>
-                    <TableCell className="font-bold text-slate-600 text-center uppercase">{member.branch || "-"}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center p-8 text-muted-foreground font-medium">
-              Committee Members are currently being updated.
-            </div>
-          )}
-        </div>
+        <h2 className="font-display font-bold text-3xl mb-6 text-slate-800 border-b pb-2 text-center uppercase tracking-wide">Organisers</h2>
+        <StudentTable rows={organisers} isLoading={isLoading} emptyLabel="Organisers are currently being updated." />
 
-        <h2 className="font-display font-bold text-3xl mb-6 text-slate-800 border-b pb-2">Organizers</h2>
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-12">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-bold text-lg text-slate-900">Name</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Roll no</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Year</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Branch</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {studentOrganizers.map((student, i) => (
-                <TableRow key={i}>
-                  <TableCell className="font-medium text-slate-700">{student.name}</TableCell>
-                  <TableCell>{student.rollNo}</TableCell>
-                  <TableCell>{student.year}</TableCell>
-                  <TableCell>{student.branch}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <h2 className="font-display font-bold text-3xl mb-6 text-slate-800 border-b pb-2 text-center uppercase tracking-wide">Coordinators</h2>
+        <StudentTable rows={coordinators} isLoading={isLoading} emptyLabel="Coordinators are currently being updated." />
 
-        <h2 className="font-display font-bold text-3xl mb-6 text-slate-800 border-b pb-2">Coordinators</h2>
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-          <Table>
-            <TableHeader className="bg-slate-50">
-              <TableRow>
-                <TableHead className="font-bold text-lg text-slate-900">Name</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Roll no</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Year</TableHead>
-                <TableHead className="font-bold text-lg text-slate-900">Branch</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {coordinators.map((student, i) => (
-                <TableRow key={i}>
-                  <TableCell className="font-medium text-slate-700">{student.name}</TableCell>
-                  <TableCell>{student.rollNo}</TableCell>
-                  <TableCell>{student.year}</TableCell>
-                  <TableCell>{student.branch}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
       </div>
     </div>
   );

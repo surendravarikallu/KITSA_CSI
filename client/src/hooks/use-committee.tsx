@@ -18,10 +18,7 @@ export function useCommittee() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(member),
             });
-
-            if (!res.ok) {
-                throw new Error(await res.text());
-            }
+            if (!res.ok) throw new Error(await res.text());
             return res.json();
         },
         onSuccess: () => {
@@ -36,10 +33,7 @@ export function useCommittee() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updates),
             });
-
-            if (!res.ok) {
-                throw new Error(await res.text());
-            }
+            if (!res.ok) throw new Error(await res.text());
             return res.json();
         },
         onSuccess: () => {
@@ -52,18 +46,23 @@ export function useCommittee() {
             const res = await fetch(`/api/admin/committee/${id}`, {
                 method: "DELETE",
             });
-
-            if (!res.ok) {
-                throw new Error(await res.text());
-            }
+            if (!res.ok) throw new Error(await res.text());
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["/api/committee"] });
         },
     });
 
+    // Derived filtered lists by role
+    const committeeOnly = members?.filter(m => m.memberRole === "committee") ?? [];
+    const organisers = members?.filter(m => m.memberRole === "organiser") ?? [];
+    const coordinators = members?.filter(m => m.memberRole === "coordinator") ?? [];
+
     return {
         members,
+        committeeOnly,
+        organisers,
+        coordinators,
         isLoading,
         error,
         createMember: createMutation.mutate,
