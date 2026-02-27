@@ -29,6 +29,11 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     seedDatabase().catch(console.error);
   }
 
+  // Health Check for Render Deployment
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   // User Events
   app.get(api.auth.myEvents.path, authenticateUser, async (req, res) => {
     const registrations = await storage.getUserRegistrations(req.user!.id);
