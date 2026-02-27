@@ -2,10 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth, authenticateUser, authorizeRoles, hashPassword } from "./auth";
 import { storage } from "./storage";
-import { api } from "@shared/routes";
+import { api } from "../shared/routes";
 import { z } from "zod";
 import multer from "multer";
-import { insertCommitteeMemberSchema } from "@shared/schema";
+import { insertCommitteeMemberSchema } from "../shared/schema";
 
 // Configure multer for ID Card uploads (Memory Storage for Database)
 const upload = multer({

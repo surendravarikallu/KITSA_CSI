@@ -1,5 +1,5 @@
 import { db, pool } from "./db";
-import { users, events, registrations, gallery, contacts, committeeMembers } from "@shared/schema";
+import { users, events, registrations, gallery, contacts, committeeMembers } from "../shared/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -16,7 +16,7 @@ import type {
   GalleryItem, InsertGalleryItem,
   ContactMessage, InsertContactMessage,
   CommitteeMember, InsertCommitteeMember
-} from "@shared/schema";
+} from "../shared/schema";
 
 
 export interface IStorage {
