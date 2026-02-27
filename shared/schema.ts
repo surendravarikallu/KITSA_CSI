@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb, varchar, json } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -66,6 +66,12 @@ export const committeeMembers = pgTable("committee_members", {
   orderOffset: integer("order_offset").default(0),
   memberRole: text("member_role", { enum: ["committee", "organiser", "coordinator"] }).default("committee").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const sessionTable = pgTable("session", {
+  sid: varchar("sid").primaryKey(),
+  sess: json("sess").notNull(),
+  expire: timestamp("expire", { precision: 6, mode: "date" }).notNull(),
 });
 
 // === RELATIONS ===

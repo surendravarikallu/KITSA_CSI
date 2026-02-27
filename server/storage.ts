@@ -3,8 +3,12 @@ import { users, events, registrations, gallery, contacts, committeeMembers } fro
 import { eq, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
+import { Pool } from "pg";
 
 const MemoryStore = createMemoryStore(session);
+const PgSessionStore = connectPgSimple(session);
+
 import type {
   User, InsertUser,
   Event, InsertEvent,
@@ -62,9 +66,22 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    });
+    if (process.env.DATABASE_URL) {
+      // Use PostgreSQL for session storage so logins persist in serverless environments (like Vercel)
+      this.sessionStore = new PgSessionStore({
+        pool: new Pool({
+          connectionString: process.env.DATABASE_URL,
+          ssl: { rejectUnauthorized: false }
+        }),
+        tableName: 'session',
+        createTableIfMissing: true,
+      });
+    } else {
+      // Fallback for local development if not using database sessions
+      this.sessionStore = new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      });
+    }
   }
 
   // Users

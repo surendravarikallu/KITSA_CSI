@@ -24,8 +24,10 @@ import { seedDatabase } from "./seed";
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   setupAuth(app);
 
-  // Seed DB
-  seedDatabase().catch(console.error);
+  // Seed DB only in development
+  if (process.env.NODE_ENV !== "production") {
+    seedDatabase().catch(console.error);
+  }
 
   // User Events
   app.get(api.auth.myEvents.path, authenticateUser, async (req, res) => {
