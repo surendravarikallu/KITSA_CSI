@@ -8,12 +8,9 @@ app.use(express.urlencoded({ extended: false }));
 
 let isReady = false;
 
-// Initialize routes asynchronously but map the requests to it
 const init = async () => {
     if (!isReady) {
         try {
-            // We pass a dummy server just to satisfy the function signature
-            // Since Vercel Serverless handles the HTTP server part
             const mockServer: any = {
                 listen: () => { },
                 on: () => { },
@@ -22,13 +19,28 @@ const init = async () => {
             await registerRoutes(mockServer, app);
             isReady = true;
         } catch (err) {
-            console.error("Failed to initialize Vercel serverless application:", err);
-            throw err;
+            console.error("[CRITICAL] Failed to initialize Vercel serverless application:", err);
+            // Don't throw here, let it pass so the request handler can return the 500 with details
         }
     }
 };
 
 export default async (req: any, res: any) => {
-    await init();
-    return app(req, res);
+    try {
+        await init();
+        if (!isReady) {
+            return res.status(500).json({
+                error: "Initialization failed",
+                details: "Check Vercel Function Logs for [CRITICAL] tags."
+            });
+        }
+        return app(req, res);
+    } catch (err: any) {
+        console.error("[CRITICAL] Request handling error:", err);
+        return res.status(500).json({
+            error: "Internal Server Error",
+            message: err.message,
+            stack: process.env.NODE_ENV === "development" ? err.stack : undefined
+        });
+    }
 };

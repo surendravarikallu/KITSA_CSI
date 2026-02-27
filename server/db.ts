@@ -1,9 +1,14 @@
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool, neonConfig } from "@neondatabase/serverless";
-import ws from "ws";
 import * as schema from "../shared/schema";
 
-neonConfig.webSocketConstructor = ws;
+try {
+  // Required in standard Node but may fail or be unnecessary in Vercel Edge/Serverless depending on node ver setup
+  const ws = require("ws");
+  neonConfig.webSocketConstructor = ws;
+} catch (e) {
+  console.log("Using default WebSocket constructor");
+}
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
